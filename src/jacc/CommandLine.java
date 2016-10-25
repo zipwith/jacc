@@ -25,6 +25,7 @@ public class CommandLine {
         boolean     wantTokens = true;
         boolean     wantText   = false;
         boolean     wantHTML   = false;
+        boolean     wantDot    = false;
         boolean     wantFirst  = false;
         NameList    errFiles   = null;
         NameList    runFiles   = null;
@@ -53,6 +54,9 @@ public class CommandLine {
                             break;
                         case 'h':
                             wantHTML   = true;
+                            break;
+                        case 'd':
+                            wantDot    = true;
                             break;
                         case '0':
                             settings.setMachineType(Settings.LR0);
@@ -130,6 +134,10 @@ public class CommandLine {
             new HTMLOutput(handler, job, wantFirst)
              .write(prefix + name + "Machine.html");
         }
+        if (wantDot) {
+            new DotOutput(handler, job)
+             .write(prefix + name + ".dot");
+        }
         final boolean showState = wantStates;
         NameList.visit(runFiles, new NameList.Visitor() {
             void visit(String name) { job.readRunExample(name, showState); }
@@ -147,6 +155,7 @@ public class CommandLine {
         System.err.println(" -t        do not generate token specification");
         System.err.println(" -v        output text description of machine");
         System.err.println(" -h        output HTML description of machine");
+        System.err.println(" -d        output dot description of machine");
         System.err.println(" -f        show first/follow sets (with -h or -v)");
         System.err.println(" -a        treat as LALR(1) grammar (default)");
         System.err.println(" -s        treat as SLR(1) grammar");
