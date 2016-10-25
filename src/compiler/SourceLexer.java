@@ -64,17 +64,6 @@ public abstract class SourceLexer extends Lexer {
         return c;
     }
 
-    protected int nextChar(int num) {
-        if (line==null) {
-            c = EOF;
-        } else if ((col+=num)>=line.length()) {
-            c = EOL;
-        } else {
-            c = line.charAt(col);
-        }
-        return c;
-    }
-
     public void close() {
         if (source != null) {
             source.close();
