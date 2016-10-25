@@ -24,7 +24,7 @@ public abstract class SourceLexer extends Lexer {
      */
     protected int col = (-1);
 
-    protected SourcePosition pos;
+    private SourcePosition pos;
 
     protected final static int EOF = -1;
     protected final static int EOL = '\n';
