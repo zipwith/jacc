@@ -1,0 +1,7 @@
+"Unexpected opening parenthesis"
+   : ')'
+   ;
+
+"Missing operand"
+   : expr INTEGER
+   ;

@@ -1,0 +1,165 @@
+// To compile and run this program using jacc and Sun's JDK:
+//
+// In a directory containing only the file Calc.jacc:
+//
+//    jacc Calc.jacc
+//    javac *.java
+//    java  CalcParser
+//     ... enter arithmetic expressions ... hit EOF to terminate
+//
+
+
+%{
+  abstract class Expr {
+    abstract int eval();
+  }
+
+  class IntExpr extends Expr {
+    private int value;
+    IntExpr(int value) { this.value = value; }
+    int eval() { return value; }
+  }
+
+  abstract class BinExpr extends Expr {
+    protected Expr left, right;
+    BinExpr(Expr left, Expr right) {
+      this.left = left;  this.right = right;
+    }
+  }
+
+  class AddExpr extends BinExpr {
+    AddExpr(Expr left, Expr right) { super(left, right); }
+    int eval() { return left.eval() + right.eval(); }
+  }
+
+  class SubExpr extends BinExpr {
+    SubExpr(Expr left, Expr right) { super(left, right); }
+    int eval() { return left.eval() - right.eval(); }
+  }
+
+  class MulExpr extends BinExpr {
+    MulExpr(Expr left, Expr right) { super(left, right); }
+    int eval() { return left.eval() * right.eval(); }
+  }
+
+  class DivExpr extends BinExpr {
+    DivExpr(Expr left, Expr right) { super(left, right); }
+    int eval() { return left.eval() / right.eval(); }
+  }
+
+  class CalcLexer implements CalcTokens {
+    private int c = ' ';
+
+    /** Read a single input character from standard input.
+     */
+    private void nextChar() {
+      if (c>=0) {
+        try {
+          c = System.in.read();
+        } catch (Exception e) {
+          c = (-1);
+        }
+      }
+    }
+
+    private int     token;
+    private IntExpr yylval;
+
+    /** Read the next token and return the
+     *  corresponding integer code.
+     */
+    int nextToken() {
+      for (;;) {
+        // Skip whitespace
+        while (c==' ' || c=='\n' || c=='\t' || c=='\r') {
+          nextChar();
+        }
+        if (c<0) {
+          return (token=ENDINPUT);
+        }
+        switch (c) {
+          case '+' : nextChar();
+                     return token='+';
+          case '-' : nextChar();
+                     return token='-';
+          case '*' : nextChar();
+                     return token='*';
+          case '/' : nextChar();
+                     return token='/';
+          case '(' : nextChar();
+                     return token='(';
+          case ')' : nextChar();
+                     return token=')';
+          case ';' : nextChar();
+                     return token=';';
+          default  : if (Character.isDigit((char)c)) {
+                       int n = 0;
+                         do {
+                           n = 10*n + (c - '0');
+                           nextChar();
+                         } while (Character.isDigit((char)c));
+                         yylval = new IntExpr(n);
+                         return token=INTEGER;
+                       } else {
+                         Main.error("Illegal character "+c);
+                         nextChar();
+                       }
+        }
+      }
+    }
+
+    /** Return the token code for the current lexeme.
+     */
+    int getToken() {
+      return token;
+    }
+
+    /** Return the semantic value for the current lexeme.
+     */
+    IntExpr getSemantic() {
+      return yylval;
+    }
+  }
+
+  class Main {
+    public static void main(String[] args) {
+      CalcLexer  lexer  = new CalcLexer();
+      lexer.nextToken();
+      CalcParser parser = new CalcParser(lexer);
+      parser.parse();
+    }
+
+    static void error(String msg) {
+      System.out.println("ERROR: " + msg);
+      System.exit(1);
+    }
+  }
+%}
+
+%semantic Expr
+%token '+' '-' '*' '/' '(' ')' ';' INTEGER
+%left  '+' '-'
+%left  '*' '/'
+
+%%
+
+prog : prog ';' expr    { System.out.println($3.eval()); }
+     | expr             { System.out.println($1.eval()); }
+     ;
+expr : expr '+' expr	{ $$ = new AddExpr($1, $3); }
+     | expr '-' expr	{ $$ = new SubExpr($1, $3); }
+     | expr '*' expr	{ $$ = new MulExpr($1, $3); }
+     | expr '/' expr	{ $$ = new DivExpr($1, $3); }
+     | '(' expr ')'     { $$ = $2; }
+     | INTEGER          { $$ = $1; }
+     ;
+
+%%
+  private CalcLexer lexer;
+
+  CalcParser(CalcLexer lexer) { this.lexer = lexer; }
+
+  private void yyerror(String msg) {
+    Main.error(yyerrno<0 ? msg : yyerrmsgs[yyerrno]);
+  }
+

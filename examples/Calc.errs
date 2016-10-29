@@ -1,0 +1,37 @@
+// This file contains some simple examples of
+// errors diagnostics for Calc.jacc:
+
+"left operand is missing"
+   :  '+' expr
+   |  '-' expr
+   |  '*' expr
+   |  '/' expr
+   ;
+
+"unexpected closing parenthesis"
+   :  expr ')' ;
+
+"unexpected opening parenthesis"
+   :  expr '(' ;
+
+"right operand is missing"
+   :  expr '+'
+   |  expr '+' ')'
+   |  expr '+' '+'
+   |  expr '-'
+   |  expr '-' ')'
+   |  expr '*'
+   |  expr '*' ')'
+   |  expr '/'
+   |  expr '/' ')'
+   ;
+
+"unnecessary semicolon after last expression (or missing expression)"
+   : prog ';' ;
+
+"empty parentheses"
+   : '(' ')' ;
+
+"missing expression"
+   : ';' ;
+

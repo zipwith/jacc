@@ -1,0 +1,29 @@
+// This file contains an extension to the calculator program in Calc.jacc
+// that adds support for unary minus.  It is intended as a simple example
+// to illustrate jacc's ability to take input from multiple files.
+//
+// To compile and run this program using jacc and Sun's JDK:
+//
+// In a directory containing only the files Calc.jacc and Unary.jacc:
+//
+//    jacc Calc.jacc Unary.jacc
+//    javac *.java
+//    java  Calc
+//     ... enter arithmetic expressions ... hit EOF to terminate
+//
+
+
+%{
+  class UminusExpr extends Expr {
+    private Expr expr;
+    UminusExpr(Expr expr) { this.expr = expr; }
+    int eval() { return -expr.eval(); }
+  }
+%}
+
+%left  UMINUS
+
+%%
+
+expr : '-' expr %prec UMINUS   { $$ = new UminusExpr($2); }
+     ;
