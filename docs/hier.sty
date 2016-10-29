@@ -1,0 +1,80 @@
+\newdimen\hierlinethickness  % thickness of lines used in the drawing
+\hierlinethickness=0.2pt
+
+\newdimen\hierboxsep         % separation between box border and contents
+\hierboxsep=1pt
+
+\newdimen\hiervdrop          % vertical drop from top of box to horiz entry
+\hiervdrop=2mm
+
+\newdimen\hiervgap           % vertical gap between boxes
+\hiervgap=2mm
+
+\newdimen\hierhgap           % horizontal gap between boxes and horiz lines
+\hierhgap=1mm
+
+\newdimen\hierboxwidth       % width of framed boxes in hierarchy diagrams
+\hierboxwidth=26mm
+
+\newdimen\scrdim
+\newdimen\joinh
+
+\newbox\scrbox
+\newbox\vcol
+\newbox\hierleft
+\newbox\hierright
+
+% \toDrop{arg}:  forms a box from the specified argument, lowering it as
+% necessary so that the final result has height \hiervdrop.
+\def\toDrop#1{\setbox\scrbox=#1\scrdim=\ht\scrbox
+              \advance\scrdim by-\hiervdrop
+              \lower\scrdim\box\scrbox}
+
+\def\hierLineIntoBox{\vrule depth0pt width2\hierhgap height\hierlinethickness}
+\def\hierbox#1{\vbox{\hrule width\hierboxwidth height\hierlinethickness
+                     \hbox to \hierboxwidth
+                     {\vrule width\hierlinethickness
+                      \strut #1\vrule width\hierlinethickness
+                     }\hrule width\hierboxwidth height\hierlinethickness}}
+
+\def\hier#1{%
+\setbox\hierleft=\hbox{\hierLineIntoBox\toDrop{\hierbox{\,#1\hfill}}}%
+\@ifnextchar+{\colInit}{%
+\@ifnextchar-{\vcolInit}{%
+\setbox\hierright=\hbox{}\hierDisplay}}}
+
+\def\basehier#1{%
+\setbox\hierleft=\hbox{\toDrop{\hierbox{\,#1\hfill}}}%
+\@ifnextchar+{\colInit}{%
+\@ifnextchar-{\vcolInit}{%
+\setbox\hierright=\hbox{}\hierDisplay}}}
+
+%---
+
+\def\colInit+#1{\joinh=0pt\setbox\vcol=\vbox{#1}\colLoop}
+\def\colLoop{\@ifnextchar+{\colAdd}{\colDone}}
+\def\colAdd+#1{\setbox\vcol=\vbox{\unvbox\vcol\vskip\hiervgap}\joinh=\ht\vcol
+               \setbox\vcol=\vbox{\unvbox\vcol #1}\colLoop}
+\def\colDone{%
+\setbox\hierright=\hbox{\vrule depth0pt width\hierhgap height\hierlinethickness
+                        \vrule height\hierlinethickness
+                               width\hierlinethickness
+                               depth\joinh
+                        \toDrop{\box\vcol}}\hierDisplay}
+\def\hierDisplay{\hbox{\unhbox\hierleft\unhbox\hierright}}
+
+%---
+
+\def\vcolInit-#1{\joinh=0pt\setbox\vcol=\vbox{#1}\vcolLoop}
+\def\vcolLoop{\@ifnextchar+{\vcolAdd}{\vcolDone}}
+\def\vcolAdd+#1{\setbox\vcol=\vbox{\unvbox\vcol\vskip\hiervgap}\joinh=\ht\vcol
+                \setbox\vcol=\vbox{\unvbox\vcol #1}\vcolLoop}
+\def\vcolDone{%
+\scrdim=\hiervdrop\advance\scrdim by\hiervgap
+\setbox\hierright=\hbox{\vrule height\scrdim
+                               width\hierlinethickness
+                               depth\joinh
+                        \toDrop{\box\vcol}}\vhierDisplay}
+\def\vhierDisplay{\hbox{\vbox{\box\hierleft\hrule width0mm depth0pt height0pt\hbox{\hskip3\hierhgap\unhbox\hierright}}}}
+
+%---
