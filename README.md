@@ -10,14 +10,8 @@ made available here as free software under the GPL 3.0 license.
 
 # Overview
 `jacc` is a parser generator for [java](http://java.sun.com).  But there
-are already several other parser generators for Java, including
-[CUP](http://www.cs.princeton.edu/~appel/modern/java/CUP/),
-[Antlr](http://www.antlr.org/),
-[JavaCC](http://www.webgain.com/products/java_cc/),
-[SableCC](http://www.sablecc.org/"),
-[Coco/R](http://www.ssw.uni-linz.ac.at/Research/Projects/Coco/Java/),
-[BYACC/Java](<a href="http://troi.lincom-asg.com/~rjamison/byacc/),
-the [Jikes Parser Generator](http://www-124.ibm.com/developerworks/projects/jikes/).
+are already several other parser generators for Java, including CUP,
+Antlr, JavaCC, SableCC, Coco/R, BYACC/Java, and the Jikes Parser Generator.
 So why would somebody write yet another one, and why might you want to use it?
 
 In short, what makes jacc different from other
