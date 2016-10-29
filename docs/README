@@ -1,0 +1,7 @@
+To build the documentation, run:
+
+    pdflatex jacc
+    bibtex jacc
+    pdflatex jacc
+    pdflatex jacc
+
