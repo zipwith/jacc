@@ -1,5 +1,6 @@
 # jacc
 ![jacc logo](images/jacc.gif)
+
 Copyright Mark P Jones, Portland State University, 2004-2016.
 
 This repository provides a copy of the source code for jacc, just another
