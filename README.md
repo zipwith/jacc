@@ -9,7 +9,7 @@ the [jacc homepage](http://web.cecs.pdx.edu/~mpj/jacc) and are
 made available here as free software under the GPL 3.0 license.
 
 # Overview
-`jacc` is a parser generator for [java](http://java.sun.com).  But there
+jacc is a parser generator for [java](http://java.sun.com).  But there
 are already several other parser generators for Java, including CUP,
 Antlr, JavaCC, SableCC, Coco/R, BYACC/Java, and the Jikes Parser Generator.
 So why would somebody write yet another one, and why might you want to use it?
@@ -51,6 +51,34 @@ tools is its combination of the following features:
 
 So, if you are looking for a yacc-compatible
 parser generator for Java, then perhaps jacc may meet your needs!
+
+# Installation
+Installation of this software requires a suitable Java development
+kit as well as a copy of ant.  I have used these instructions with
+a variety of different Java versions on a variety of different
+platforms.
+
+To build, use the command `ant` (or `ant jacc`, if you prefer).
+This will create a file `jacc.jar` in the `dist/` folder that you
+should move to a suitable directory on your machine.  After this:
+
+- On Windows:
+  Copy the batch file `scripts/jacc.bat` to a directory on your path.
+  You should edit this file so that the string `%JACC_PATH%` is
+  replaced with the absolute path of the directory containing
+  `jacc.jar` (or else set the environment variable `JACC_PATH` to
+  point to that directory).
+
+- On Unix:
+  Copy the file `scripts/jacc` to a directory on your path.
+  You should edit this file so that the string `$JACC_PATH` is
+  replaced with the absolute path of the directory containing
+  `jacc.jar` (or else set the environment variable `JACC_PATH`
+  to point to that directory).
+
+After the appropriate files have been installed, you can use the command
+`ant clean` to delete temporary files that were constructed during the
+installation process.
 
 # History
 jacc was written by Mark P Jones at the end of 1999 for use in his

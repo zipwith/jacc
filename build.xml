@@ -1,0 +1,28 @@
+<?xml version="1.0"?>
+<project name="jacc" default="jacc" basedir=".">
+
+  <!-- Initialization: -->
+  <target name="prepare">
+    <mkdir dir="bin"/>
+    <mkdir dir="dist"/>
+  </target>
+
+  <!-- Cleanup: -->
+  <target name="clean">
+    <delete dir="bin"/>
+    <delete dir="dist"/>
+  </target>
+
+  <!-- The jacc parser generator: -->
+  <target name="jacc" depends="prepare"
+          description="Compile the jacc parser generator">
+    <javac srcdir="src" includeantruntime="false" destdir="bin"/>
+    <jar jarfile="dist/jacc.jar" update="false">
+      <fileset dir="bin" includes="compiler/**,jacc/**"/>
+      <manifest>
+        <attribute name="Main-Class" value="jacc.CommandLine"/>
+      </manifest>
+    </jar>
+  </target>
+
+</project>
